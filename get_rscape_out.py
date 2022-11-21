@@ -116,7 +116,7 @@ with open(bed, "r") as bed, open(genome, "r") as genome, open(out, "w") as out, 
             continue
         df['seq'] = df.apply(lambda x: x['seq1'] + ["a"]*10 + x['seq2'],1)
         df.drop(['seq1','seq2'], axis = 1, inplace = True)
-        #добавляем гэпы в нужном месте на структуру
+        #add gaps from reference sequence to structure
         refseq = ref1 + ["."]*10 + ref2
         duplex = list(duplex_left) + ["."]*10 + list(duplex_right)
         try:
@@ -156,7 +156,7 @@ with open(bed, "r") as bed, open(genome, "r") as genome, open(out, "w") as out, 
             out.write(seqname + "\t" + seq + "\n")
         out.write("#=GC SS_cons\t" + ann + "\n")
         out.write("//\n")
-#write stockholm alignment to temp file for r-scape (потому что эта хрень долбаная не ест stdin)
+#write stockholm alignment to temp input file for r-scape
         with open(delete_file + ".sto", "w") as temp_sto:
             temp_sto.write("# STOCKHOLM 1.0\n")
             temp_sto.write("#=GF AC    " + "".join(pccrid.split(",")[0].split("=")) + "\n")
@@ -166,14 +166,11 @@ with open(bed, "r") as bed, open(genome, "r") as genome, open(out, "w") as out, 
                 temp_sto.write(seqname + "\t" + seq + "\n")
             temp_sto.write("#=GC SS_cons\t" + ann + "\n")
             temp_sto.write("//\n")
-#extract subtree from original tree for big maf and write to tempfile for r-scape
+#extract subtree from original tree for big maf and write to temp input file for r-scape
         temp_tree = tree.copy("newick")
         temp_tree.prune(list(df.species_chr), preserve_branch_length=True)
         temp_tree.write(format=5, outfile= delete_file + ".nh")
-#run R-scape with sto and nh temp files, write output files to outdir 
-#consider --outname /dev/null to delete all files of output and capture stdout instead (more difficult to parse as all file types are joined together, but maybe faster)
-#без вариантов надо пробовать хватать stdout, и не тратить время на открытие отдельных файлов   
-# ебаный р-скейп добавляет к черной дыре свои ебучие расширения, и поэтому файл не открывается на запись     
+#run R-scape with *.sto and *.nh temp files, write output files to outdir     
 #don`t forget <mkdir ./temp> or change it
         process = subprocess.Popen("~/Programs/rscape_v2.0.0.j/bin/R-scape -E 1 -s --nofigures --samplewc --treefile "+ delete_file +".nh --outname " + delete_file + " " + delete_file +".sto",
                                  shell=True, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
