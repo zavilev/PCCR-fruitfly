@@ -1,6 +1,6 @@
 #looks through rscape output to find PCCRs with product evalue less than treshhold
 #writes pair (id - significant evalue) to file
-#prints id with description 
+#prints id with description and corresponding basepair evalues to STDOUT 
 
 from operator import mul
 from functools import reduce
@@ -11,7 +11,7 @@ if argv[2]=="inf":
     treshold = np.inf
 else:
     treshhold = float(argv[2])
-pref = ["aa","ab","ac","ad"] #big rscape output was splitted into files
+pref = ["aa","ab","ac","ad"] #big rscape output was split into files
 
 pccrs = 0
 out = open(argv[1], "w") #for example, ./results/id_eval.tsv
