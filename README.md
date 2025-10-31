@@ -1,1 +1,1 @@
-This repo contains scripts for the analysis of compensatory subsitutions in pairs of conserved complementary RNA structures (PCCRs) using Rscape.
+This repo contains scripts for the analysis of compensatory subsitutions in pairs of conserved complementary RNA structures (PCCRs) using Rscape. It also contains the resulting ucsc genome browser tracks of PCCRs supported by compensatory substitutions.
